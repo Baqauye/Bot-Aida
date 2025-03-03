@@ -7,10 +7,8 @@ Aisa Bot is an advanced automation tool designed to streamline referral-based ac
 # GitHub Repository: [Aida](https://github.com/airdropbom/Aida-Bot.git)
 
 ## Features  
-✅ **Automated Account Creation** – Creates multiple accounts using your referral link.  
 ✅ **Task Completion** – Automatically completes assigned tasks on the website.  
 ✅ **Seamless Website Interaction** – Fills forms, submits data, and navigates through websites.  
-✅ **Wallet Generation & Storage** – Saves generated wallets in `wallets.txt`.  
 ✅ **Multi-Account Support** – Reads accounts from `account.txt` for easy management.  
 ✅ **Scheduled Execution** – Runs at intervals for continuous automation.  
 
