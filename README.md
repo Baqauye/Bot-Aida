@@ -27,7 +27,7 @@ cd Aida-Bot
 
 Install Dependency 
 ```sh
-npm install ethers
+npm install axios
 ```
 Run The Bot
 ```sh
