@@ -26,6 +26,14 @@ const config = {
     }
 };
 
+// Hardcoded task IDs from the second script
+const taskIds = [
+    'f8a1de65-613d-4500-85e9-f7c572af3248',
+    '34ec5840-3820-4bdd-b065-66a127dd1930',
+    '2daf1a21-6c69-49f0-8c5c-4bca2f3c4e40',
+    'df2a34a4-05a9-4bde-856a-7f5b8768889a'
+];
+
 // Readline Interface
 const rl = readline.createInterface({
     input: process.stdin,
@@ -87,7 +95,7 @@ async function signMessage(wallet, message) {
     return await wallet.signMessage(message);
 }
 
-// Login Function (Refer Create)
+// Login Function
 async function login(wallet, inviterCode) {
     const timestamp = Date.now();
     const message = `MESSAGE_ETHEREUM_${timestamp}:${timestamp}`;
@@ -106,24 +114,6 @@ async function login(wallet, inviterCode) {
     } catch (error) {
         console.error(`Login Failed:`, error.response?.data || error.message);
         return false;
-    }
-}
-
-// Get Available Missions
-async function getAvailableMissions(accessToken) {
-    try {
-        await loadingAnimation("Fetching available missions", 3000);
-        const currentDate = new Date().toISOString();
-        const response = await axios.get(
-            `${config.baseUrl}/questing/missions?filter%5Bdate%5D=${currentDate}&filter%5Bgrouped%5D=true&filter%5Bprogress%5D=true&filter%5Brewards%5D=true&filter%5Bstatus%5D=AVAILABLE&filter%5BcampaignId%5D=${config.campaignId}`,
-            { headers: { ...config.headers, 'authorization': `Bearer ${accessToken}` } }
-        );
-        return response.data.data.filter(mission => 
-            mission.progress === "0" && mission.id !== config.excludedMissionId
-        );
-    } catch (error) {
-        console.error('Error fetching missions:', error.response?.data || error.message);
-        return [];
     }
 }
 
@@ -161,7 +151,7 @@ async function claimMissionReward(missionId, accessToken) {
     }
 }
 
-// Refer Create Function
+// Refer Create Function with Task Completion
 async function runReferCreate() {
     console.log(banner);
     const inviterCode = await askQuestion('Enter referral code: ');
@@ -170,13 +160,30 @@ async function runReferCreate() {
     for (let i = 0; i < numAccounts; i++) {
         console.log(`\nCreating account ${i + 1}/${numAccounts}...`);
         const wallet = createWallet();
-        await login(wallet, inviterCode);
+        const loginSuccess = await login(wallet, inviterCode);
+
+        if (loginSuccess) {
+            const tokens = await readTokens('token.txt');
+            const accessToken = tokens[tokens.length - 1]; // Get the latest token
+            console.log(`Using access token: ${accessToken.slice(0, 20)}...`);
+
+            // Complete and claim all hardcoded tasks
+            for (const missionId of taskIds) {
+                console.log(`Processing mission: ${missionId}`);
+                const completed = await completeMission(missionId, accessToken);
+                if (completed) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await claimMissionReward(missionId, accessToken);
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay between tasks
+            }
+        }
         await new Promise(resolve => setTimeout(resolve, 2000)); // Delay between accounts
     }
     console.log('\nRefer create process completed!');
 }
 
-// Do Task Function
+// Do Task Function (unchanged)
 async function runDoTask() {
     console.log(banner);
     const tokens = await readTokens('token.txt');
@@ -189,20 +196,12 @@ async function runDoTask() {
     for (let i = 0; i < tokens.length; i++) {
         const accessToken = tokens[i];
         console.log(`\nProcessing token ${i + 1}/${tokens.length}: ${accessToken.slice(0, 20)}...`);
-
-        const availableMissions = await getAvailableMissions(accessToken);
-        if (availableMissions.length === 0) {
-            console.log('No available missions to complete.');
-            continue;
-        }
-
-        console.log(`Found ${availableMissions.length} missions to complete.`);
-        for (const mission of availableMissions) {
-            console.log(`Processing mission: ${mission.label} (ID: ${mission.id})`);
-            const completed = await completeMission(mission.id, accessToken);
+        for (const missionId of taskIds) {
+            console.log(`Processing mission: ${missionId}`);
+            const completed = await completeMission(missionId, accessToken);
             if (completed) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                await claimMissionReward(mission.id, accessToken);
+                await claimMissionReward(missionId, accessToken);
             }
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
