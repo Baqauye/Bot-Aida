@@ -3,8 +3,7 @@
 Aisa Bot is an advanced automation tool designed to streamline referral-based account creation, task completion, and website interactions. It efficiently manages multiple accounts, automates website tasks, and securely saves generated wallet addresses for future use.  
 ## 📢 Join Our Community
 
-# Telegram Channel: .[Channel](https://t.me/airdropbombnode)
-# GitHub Repository: [Aida](https://github.com/airdropbom/Aida-Bot.git)
+
 
 ## Features  
 ✅ Automated Account Creation – Creates multiple accounts using your referral link.
@@ -18,7 +17,7 @@ Aisa Bot is an advanced automation tool designed to streamline referral-based ac
 
 Clone the repository:  
 ```sh
-git clone https://github.com/airdropbomb/Aida-Bot.git
+git clone https://github.com/Baqauye/Bot-Aida.git
 ```
 Directory 
 ```sh
