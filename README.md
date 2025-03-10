@@ -21,7 +21,7 @@ git clone https://github.com/Baqauye/Bot-Aida.git
 ```
 Directory 
 ```sh
-cd Aida-Bot
+cd Bot-Aida
 ```
 
 Install Dependency 
