@@ -1,7 +1,7 @@
-# Aisa Bot  
+# Aida Bot  
 
 Aisa Bot is an advanced automation tool designed to streamline referral-based account creation, task completion, and website interactions. It efficiently manages multiple accounts, automates website tasks, and securely saves generated wallet addresses for future use.  
-## 📢 Join Our Community
+
 
 
 
